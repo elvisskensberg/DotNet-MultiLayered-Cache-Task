@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/MultiLayeredCache.Api.Tests/MultiLayeredCache.Api.Tests.csproj" />
+  </Folder>
+  <Project Path="MultiLayeredCache.Api/MultiLayeredCache.Api.csproj" />
+  <Project Path="MultiLayeredCache.Application/MultiLayeredCache.Application.csproj" />
+  <Project Path="MultiLayeredCache.Domain/MultiLayeredCache.Domain.csproj" />
+  <Project Path="MultiLayeredCache.Infrastructure/MultiLayeredCache.Infrastructure.csproj" />
+</Solution>
