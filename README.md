@@ -57,8 +57,8 @@ A production-ready **.NET 10** application demonstrating **enterprise-grade cach
    - **Swagger UI**: http://localhost:5219 (auto-opens in Development)
    - **Health Checks**: http://localhost:5219/health
    - **API Endpoints**:
-     - `POST /api/v1/data` - Create data
-     - `GET /api/v1/data/{id}` - Retrieve data
+     - `POST /data` - Create data
+     - `GET /data/{id}` - Retrieve data
 
 ### Run Tests
 ```bash
@@ -226,8 +226,8 @@ If this were a real project with tight deadlines, I would simplify:
 ### ✅ Requirements Compliance
 
 **Core Requirements Met:**
-- ✅ GET `/data/{id}` endpoint (implemented as `/api/v1/data/{id}`)
-- ✅ POST `/data` endpoint (implemented as `/api/v1/data`)
+- ✅ GET `/data/{id}` endpoint (implemented as `/data/{id}`)
+- ✅ POST `/data` endpoint (implemented as `/data`)
 - ✅ Redis cache with 5-minute TTL
 - ✅ Self-designed in-memory cache with capacity (3-100)
 - ✅ LRU eviction (least recently used)
@@ -334,7 +334,7 @@ sequenceDiagram
     participant SDCS
     participant CosmosDB
 
-    Client->>Controller: GET /api/v1/data/{id}
+    Client->>Controller: GET /data/{id}
     Controller->>Handler: GetDataQuery
     Handler->>Redis: Try Get
 
@@ -379,7 +379,7 @@ sequenceDiagram
     participant Handler
     participant CosmosDB
 
-    Client->>Controller: POST /api/v1/data {value}
+    Client->>Controller: POST /data {value}
     Controller->>Handler: CreateDataCommand
 
     alt Validation Passes
@@ -476,7 +476,7 @@ sequenceDiagram
 - Essential for debugging distributed systems
 
 ### 8. **API Versioning (URL-based)**
-- URL segment versioning: `/api/v1/data/{id}`
+- URL segment versioning: `/data/{id}`
 - Current version: `v1.0`
 - Default version assumed if not specified
 - Easy to add v2 without breaking v1 clients
@@ -664,7 +664,7 @@ The solution implements the **exact paths specified** in the requirements. Howev
 [Route("[controller]")]  // Produces: /data/{id}
 
 // Recommended for production (commented out for task compliance)
-// [Route("api/v{version:apiVersion}/[controller]")]  // Would produce: /api/v1/data/{id}
+// [Route("api/v{version:apiVersion}/[controller]")]  // Would produce: /data/{id}
 // [ApiVersion("1.0")]
 ```
 
@@ -799,7 +799,7 @@ We implement LRU eviction using **only a Dictionary** and manual node pointers (
 
 ### 9. **Why URL-Based API Versioning Only?**
 
-**Decision**: Support only URL segment versioning (`/api/v1/data`).
+**Decision**: Support only URL segment versioning (`/data`).
 
 **Rationale**:
 - ✅ **Simplicity**: One clear way to version
@@ -896,12 +896,14 @@ We implement LRU eviction using **only a Dictionary** and manual node pointers (
 ## 📚 API Documentation
 
 ### Base URL
-- **Development**: `http://localhost:5219/api/v1`
-- **Production**: `https://your-domain.com/api/v1`
+- **Development**: `http://localhost:5219`
+- **Production**: `https://your-domain.com`
+
+> **Note:** Endpoints use direct paths (`/data`) without API versioning prefix as per task requirements. For production, consider enabling versioned routes (see [Task Requirement Compliance](#0-task-requirement-compliance--)).
 
 ### Endpoints
 
-#### **POST /api/v1/data**
+#### **POST /data**
 Create new data.
 
 **Request:**
@@ -923,11 +925,13 @@ Create new data.
 
 **Headers:**
 ```
-Location: /api/v1/data/550e8400-e29b-41d4-a716-446655440000
+Location: /data/550e8400-e29b-41d4-a716-446655440000
 X-Correlation-ID: 123e4567-e89b-12d3-a456-426614174000
 ```
 
-#### **GET /api/v1/data/{id}**
+> **Production Note:** With API versioning enabled, this would be `/api/v1/data/...`
+
+#### **GET /data/{id}**
 Retrieve data by ID.
 
 **Response:** `200 OK`
